@@ -55,17 +55,26 @@ jobs:
       - name: 判定时段
         id: sess
         run: |
-          if [ -n "${{ github.event.inputs.session }}" ]; then
-            echo "value=${{ github.event.inputs.session }}" >> $GITHUB_OUTPUT
+          MANUAL="${{ github.event.inputs.session }}"
+          SCHED="${{ github.event.schedule }}"
+          if [ -n "$MANUAL" ]; then
+            echo "value=$MANUAL" >> $GITHUB_OUTPUT
+            echo "来源: 手动触发, 时段=$MANUAL"
           else
-            H=$(date -u +%H)
-            M=$(date -u +%M)
-            # UTC 01:xx -> premarket, 07:xx -> postmarket, 15:xx -> evening
-            if [ "$H" = "01" ]; then echo "value=premarket" >> $GITHUB_OUTPUT
-            elif [ "$H" = "07" ]; then echo "value=postmarket" >> $GITHUB_OUTPUT
-            elif [ "$H" = "15" ]; then echo "value=evening" >> $GITHUB_OUTPUT
-            else echo "value=premarket" >> $GITHUB_OUTPUT
-            fi
+            # 用触发本任务的 cron 表达式判断, 不依赖运行时钟
+            # (GitHub 定时可能延迟几十分钟, 用时钟会判错时段)
+            case "$SCHED" in
+              '07 1 * * 1-5')   echo "value=premarket"  >> $GITHUB_OUTPUT ;;
+              '37 7 * * 1-5')   echo "value=postmarket" >> $GITHUB_OUTPUT ;;
+              '07 15 * * 1-5')  echo "value=evening"    >> $GITHUB_OUTPUT ;;
+              *)  # 兜底: 按 UTC 小时推断 (仅当上面都没匹配到)
+                  H=$(date -u +%H)
+                  if [ "$H" = "07" ] || [ "$H" = "08" ]; then echo "value=postmarket" >> $GITHUB_OUTPUT
+                  elif [ "$H" = "15" ] || [ "$H" = "16" ]; then echo "value=evening" >> $GITHUB_OUTPUT
+                  else echo "value=premarket" >> $GITHUB_OUTPUT
+                  fi ;;
+            esac
+            echo "来源: 定时触发 cron=$SCHED, 时段=$(cat $GITHUB_OUTPUT | cut -d= -f2)"
           fi
 
       - name: 运行复盘并推送微信
