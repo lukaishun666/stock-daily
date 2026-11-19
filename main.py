@@ -71,19 +71,29 @@ def publish_images(image_paths: list[str]) -> dict[str, str]:
             subprocess.run(["git", "add", "-f", p], check=True, capture_output=True, text=True)
         except Exception as e:
             print(f"[img] git add 失败 {os.path.basename(p)}: {e}")
+    sha = ""
     try:
         subprocess.run(["git", "commit", "-m", f"charts {_now_cn()}"],
                        capture_output=True, text=True)
+        # 取本次提交 SHA, 用作 CDN 版本号, 保证每天的图片都能刷新、不被缓存
+        r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+        sha = r.stdout.strip()[:12]
         push = subprocess.run(["git", "push"], capture_output=True, text=True)
         if push.returncode != 0:
             print("[img] git push 失败:", push.stderr[:300])
     except Exception as e:
         print("[img] git commit/push 异常:", e)
 
-    # 2) 拼外链: 优先自定义前缀, 否则默认 raw(实时生效,无 CDN 缓存延迟)
+    # 2) 拼外链
+    #    - 自定义前缀优先
+    #    - 否则 jsDelivr CDN(国内快) + SHA 版本号(绕过缓存)
+    #    - SHA 取不到时回退 raw
     if base:
         return {n: f"{base}/{n}" for n in names}
     owner, reponame = repo.split("/", 1)
+    if sha:
+        return {n: f"https://cdn.jsdelivr.net/gh/{owner}/{reponame}@{sha}/output/{n}"
+                for n in names}
     return {n: f"https://raw.githubusercontent.com/{owner}/{reponame}/main/output/{n}"
             for n in names}
 
@@ -187,9 +197,11 @@ def _push_serverchan(title: str, markdown: str, image_urls: dict[str, str]) -> b
     links = [fn for fn in order if fn in image_urls]
     if links:
         desp += "\n\n## 四大指数技术分析图\n"
+        desp += "图片加载稍慢请稍候;点图可看大图,或点下方链接在新窗口打开原图。\n"
         for fn in links:
             label = fn.replace("chart_", "").replace(".png", "")
-            desp += f"\n**{label}**\n\n![]({image_urls[fn]})\n"
+            url_i = image_urls[fn]
+            desp += f"\n**{label}**  [👉 看大图]({url_i})\n\n![]({url_i})\n"
     # Server酱 title 不能含换行
     safe_title = title.replace("\n", " ").replace("\r", " ")
     try:
