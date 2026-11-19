@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+data/
+output/*.md
+output/*.json
+# 图表图片保留在仓库,作图床用 (output/*.png 不忽略)

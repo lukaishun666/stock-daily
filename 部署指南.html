@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日复盘技能 · 部署指南(Server酱免费版)</title>
+<style>
+  :root{
+    --bg:#f7f9fc; --card:#ffffff; --ink:#1f2733; --sub:#5b6776;
+    --line:#dce3ec; --accent:#2563eb; --red:#d92d20; --green:#079455; --amberbg:#fffaeb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+    line-height:1.7;font-size:15px}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 20px 80px}
+  header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;
+    border-radius:16px;padding:30px 32px;margin-bottom:24px;
+    box-shadow:0 8px 24px rgba(37,99,235,.18)}
+  header h1{margin:0 0 8px;font-size:26px}
+  header p{margin:4px 0;opacity:.92;font-size:14px}
+  .badge{display:inline-block;background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);padding:3px 12px;border-radius:20px;
+    font-size:12px;margin:8px 8px 0 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin-bottom:18px;box-shadow:0 2px 10px rgba(16,24,40,.04)}
+  .card h2{margin:0 0 14px;font-size:19px;color:#173a7a;
+    border-left:4px solid var(--accent);padding-left:12px}
+  ol,ul{padding-left:22px;margin:8px 0}
+  li{margin:6px 0}
+  code{background:#eef2f7;color:#b42318;padding:2px 7px;border-radius:5px;
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:13px}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:16px 18px;
+    overflow:auto;font-size:13px;line-height:1.6;margin:10px 0}
+  pre code{background:none;color:inherit;padding:0}
+  .ok{background:#ecfdf3;border:1px solid #abefc6;border-radius:10px;
+    padding:14px 18px;margin:14px 0;font-size:14px;color:#05603a}
+  .note{background:var(--amberbg);border:1px solid #fedf89;border-radius:10px;
+    padding:12px 16px;margin:12px 0;font-size:14px;color:#7a4a06}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:10px}
+  .tile{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .tile b{color:#173a7a;font-size:15px}
+  .tile .t{font-size:12px;color:var(--sub)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+  th{background:#f1f5f9;color:#334155}
+  .green{color:var(--green);font-weight:600}
+  .foot{text-align:center;color:var(--sub);font-size:12px;margin-top:30px}
+  a{color:var(--accent)}
+  .price{display:inline-block;background:#dcfce7;color:#166534;padding:2px 10px;
+    border-radius:6px;font-weight:600;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>每日复盘技能 · 部署指南</h1>
+  <p>威科夫量价 + 缠论结构 · 四大指数技术分析 · 每天自动推送到微信</p>
+  <p>全程免费 · <b>无需实名、不花一分钱</b> · 无需云服务器 · 电脑关机也能收</p>
+  <div>
+    <span class="badge">GitHub Actions 定时</span>
+    <span class="badge">Server酱 免费推送</span>
+    <span class="badge">免费行情接口</span>
+  </div>
+</header>
+
+<div class="ok">
+  <b>✅ 为什么换成了 Server酱</b><br>
+  PushPlus 从 2024 年起实名认证要付一两块第三方接口费。Server酱 <b>注册即免费会员,不用实名、不花钱</b>,每天 5 条额度(你只需 3 条),而且正文支持 Markdown 表格和图片,也不用像 ClawBot 那样每天手动激活。
+</div>
+
+<div class="card">
+  <h2>这套东西是怎么工作的</h2>
+  <p>脚本托管在 GitHub,由其服务器每天定时运行,生成分析后通过 Server酱 推到你微信(服务号消息)。你的电脑全程不用开。</p>
+  <div class="grid">
+    <div class="tile"><b>① GitHub Actions</b><div class="t">云端定时触发,免费,公开仓库不限时长</div></div>
+    <div class="tile"><b>② Python 脚本</b><div class="t">取数→威科夫/缠论分析→画四张标注图</div></div>
+    <div class="tile"><b>③ GitHub 仓库</b><div class="t">兼作图床,存四张图的图片链接</div></div>
+    <div class="tile"><b>④ Server酱</b><div class="t">免费推文字+图到微信服务号</div></div>
+  </div>
+  <div class="note"><b>小提示:</b>服务号消息在微信里和订阅号一样被折叠,收到后点开"服务号"文件夹里的推送查看。这是免费方案的普遍形态,不影响内容完整。</div>
+</div>
+
+<div class="card">
+  <h2>推送时间(北京时间,周一至周五)</h2>
+  <table>
+    <tr><th>时间</th><th>内容</th></tr>
+    <tr><td>09:07</td><td>盘前操作预期:隔夜回顾 + 四指数技术面 + 威科夫/缠论 + 条件化策略 + 关键点位</td></tr>
+    <tr><td>15:37</td><td>盘后复盘:收盘概览 + 主力量价行为 + 缠论结构 + 资金流入板块 + 明日展望</td></tr>
+    <tr><td>23:07</td><td>晚间:美股三大指数 + A股回顾 + 资金主线 + 消息面提示 + 联动研判</td></tr>
+  </table>
+  <p class="t">GitHub 定时是"尽力而为",可能延迟几分钟。要改时间编辑 <code>daily.yml</code> 里的 cron(UTC = 北京减 8)。</p>
+</div>
+
+<div class="card">
+  <h2>你要准备的两样东西(都免费)</h2>
+  <table>
+    <tr><th>账号</th><th>用途</th><th>费用</th></tr>
+    <tr><td>GitHub</td><td>托管代码 + 定时运行 + 存图</td><td class="green">免费</td></tr>
+    <tr><td>Server酱</td><td>推送消息到微信</td><td class="green">免费(5条/天,免实名)</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>第一步:拿到 Server酱 的 SendKey</h2>
+  <ol>
+    <li>打开 <a href="https://sct.ftqq.com/">sct.ftqq.com</a>,点登录,用微信扫码。</li>
+    <li>扫码后关注它的服务号(方糖 / Server酱),页面会显示你的 <b>SendKey</b>(形如 <code>sct</code> 开头的一串字符),复制备用。</li>
+    <li>在微信里给这个服务号发一条测试消息确认能收(可选)。</li>
+  </ol>
+  <div class="ok">全程不需要身份证、不需要付费。免费会员每天 5 条,你一天只发 3 条,够用。<code>sctp</code> 开头的 SendKey 代码也支持,不用担心格式。</div>
+</div>
+
+<div class="card">
+  <h2>第二步:GitHub 建仓库并上传代码</h2>
+  <ol>
+    <li>登录 <a href="https://github.com">github.com</a>,新建仓库 <code>stock-daily</code>,选 <b>Public</b>,勾选 Add a README。</li>
+    <li>把本项目 <code>stock-daily</code> 文件夹里所有文件上传到仓库根目录,<b>包括隐藏的</b> <code>.github/workflows/daily.yml</code>。</li>
+  </ol>
+  <pre><code>cd stock-daily
+git init
+git remote add origin https://github.com/你的用户名/stock-daily.git
+git add .
+git commit -m "init"
+git branch -M main
+git push -u origin main</code></pre>
+</div>
+
+<div class="card">
+  <h2>第三步:把 SendKey 填进 GitHub</h2>
+  <ol>
+    <li>仓库 → <b>Settings</b> → <b>Secrets and variables</b> → <b>Actions</b> → <b>New repository secret</b>。</li>
+    <li>名称填 <code>SERVERCHAN_SENDKEY</code>,值粘贴 SendKey,保存。</li>
+  </ol>
+  <div class="note">工作流已默认用 Server酱。<code>GITHUB_TOKEN</code> 是自动提供的,不用配。PushPlus 那行是可选备份,留空即可(无需实名)。</div>
+</div>
+
+<div class="card">
+  <h2>第四步:开启 Actions 并测试</h2>
+  <ol>
+    <li>仓库点 <b>Actions</b> → 左侧点「每日复盘推送」→ 如有提示点绿色按钮启用。</li>
+    <li>点 <b>Run workflow</b> → 选 <code>premarket</code> → 运行。</li>
+    <li>等 1-2 分钟,微信服务号里应收到一份盘前报告,含四张指数图。</li>
+  </ol>
+  <div class="note">
+    <b>如果失败:</b>点进运行记录看日志。常见原因:① SendKey 填错或没填 → 检查 Secret;② 服务号取关了 → 重新关注;③ 当天 5 条额度用完 → 等次日或别反复测试。注意每次手动测试也会占额度。
+  </div>
+</div>
+
+<div class="card">
+  <h2>常见问题</h2>
+  <table>
+    <tr><th>问题</th><th>说明</th></tr>
+    <tr><td>真的完全免费吗?</td><td>是。GitHub 公开仓库 + Server酱免费会员(5条/天),你这个用量零费用。</td></tr>
+    <tr><td>要不要实名/身份证?</td><td>不用。Server酱微信扫码即可,不像 PushPlus 收实名费。</td></tr>
+    <tr><td>图能直接看到吗?</td><td>能。Server酱 desp 支持 Markdown 图片,四张图嵌在消息里,点开即看。</td></tr>
+    <tr><td>能改推送时间吗?</td><td>编辑 <code>daily.yml</code> 三行 cron(UTC = 北京减 8)。</td></tr>
+    <tr><td>能盯个股吗?</td><td>当前是四大指数 + 板块资金。加个股改 core.py 的 INDICES 配置。</td></tr>
+    <tr><td>数据准吗?</td><td>行情来自新浪/东财免费接口,收盘后为当日数据;消息面需人工复核,报告里已标注。</td></tr>
+  </table>
+</div>
+
+<div class="foot">本方案基于公开资料整理 · 量化分析仅供参考,不构成投资建议 · 市场有风险,投资需谨慎</div>
+
+</div>
+</body>
+</html>
